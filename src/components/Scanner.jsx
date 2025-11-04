@@ -350,7 +350,7 @@ const QRTicketSystem = () => {
             </div>
 
             {/* Quick Test Buttons */}
-            <div className="mb-6">
+            {/* <div className="mb-6">
               <h3 className="text-sm font-medium text-gray-700 mb-3">
                 Quick Test (Demo)
               </h3>
@@ -371,7 +371,7 @@ const QRTicketSystem = () => {
                   </button>
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* Scan Result */}
             {scanResult && (
