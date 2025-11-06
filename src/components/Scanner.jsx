@@ -194,16 +194,17 @@ const QRTicketSystem = () => {
       }
 
       // Success response
+      // Success response
       if (data.success) {
         setScanResult({
           success: true,
           message: "Entry Approved ✓",
           details: "Student verified successfully",
           ticket: {
-            id: data.ticket.id,
-            studentName: data.ticket.studentName,
-            rollNumber: data.ticket.rollNumber,
-            email: data.ticket.email,
+            id: data.ticket.ticketId,
+            studentName: data.ticket.attendeeName,
+            rollNumber: data.ticket.rollNumber || "N/A",
+            email: data.ticket.email || "N/A",
             eventName: data.ticket.eventName,
             status: "used",
             scannedAt: data.ticket.scannedAt,
