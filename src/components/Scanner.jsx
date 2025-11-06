@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, use } from "react";
 import {
   Camera,
   Check,
@@ -17,6 +17,7 @@ const QRTicketSystem = () => {
   const [scannerError, setScannerError] = useState(null);
   const scannerRef = useRef(null);
   const html5QrCodeRef = useRef(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Mock database of tickets (in production, this comes from MongoDB via API)
   const [tickets] = useState([
@@ -104,7 +105,32 @@ const QRTicketSystem = () => {
   };
 
   // Handle successful QR scan
-  const onScanSuccess = (decodedText, decodedResult) => {
+  // const onScanSuccess = (decodedText, decodedResult) => {
+  //   console.log("QR Code detected:", decodedText);
+
+  //   // Extract ticketId from QR code data
+  //   let ticketId;
+  //   try {
+  //     // If QR contains JSON data
+  //     const qrData = JSON.parse(decodedText);
+  //     ticketId = qrData.ticketId;
+  //   } catch (e) {
+  //     // If QR contains plain text (ticketId directly)
+  //     ticketId = decodedText;
+  //   }
+
+  //   // Stop scanner and verify ticket
+  //   stopScanner();
+  //   verifyTicket(ticketId);
+  // };
+  const onScanSuccess = async (decodedText, decodedResult) => {
+    // Prevent multiple scans while processing
+    if (isProcessing) {
+      console.log("Already processing a scan, ignoring...");
+      return;
+    }
+
+    setIsProcessing(true);
     console.log("QR Code detected:", decodedText);
 
     // Extract ticketId from QR code data
@@ -118,9 +144,13 @@ const QRTicketSystem = () => {
       ticketId = decodedText;
     }
 
-    // Stop scanner and verify ticket
-    stopScanner();
-    verifyTicket(ticketId);
+    // Stop scanner immediately after detecting QR code
+    await stopScanner();
+
+    // Then verify ticket
+    await verifyTicket(ticketId);
+
+    setIsProcessing(false);
   };
 
   const onScanFailure = (error) => {
